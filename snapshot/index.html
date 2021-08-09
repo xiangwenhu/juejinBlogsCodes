@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+    <h1>云的世界</h1>
+    <div>看什么看，看完记得点赞</div>
+    <img crossorigin="anonymous"
+        src="https://sf1-ttcdn-tos.pstatp.com/img/user-avatar/f1a9f122e925aeef5e4534ff7f706729~300x300.image" />
+    <div>
+        <button onclick="onSnapshot()">点解截图</button>
+    </div>
+    <hr>
+
+
+
+    <script src="./html2canvas.min.js"></script>
+    <script>
+        function onSnapshot() {
+            html2canvas(document.body, {
+                useCORS: true,
+                backgroundColor: null,
+            }
+            ).then(function (canvas) {
+                document.body.appendChild(canvas);
+            });
+        }
+
+    </script>
+
+</body>
+
+</html>
