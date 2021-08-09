@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -12,19 +11,17 @@
             margin: 0;
             position: relative;
         }
-
         video {
             width: 60%;       
             margin: auto;
             display: block;
+            max-height: 400px;
         }
-
         .list{
             padding-left: 10px;
             color: #2440b3;
             cursor: pointer;
         }
-
         .f-player{
             position: fixed;
             right: 0;
@@ -33,31 +30,29 @@
             display: none;   
         }
 
+        .btn {
+            font-weight: 700;
+            color: #fff;
+            
+        }
     </style>
 </head>
-
 <body>
-
     <div>
         <video id="videoEL" controls autoplay></video>
     </div>
-
-    <div>
-        <button id="btnRecord">录制</button>
-        <button id="btnStop">停止</button>
+    <div style="text-align: center; margin-top: 10px;">
+        <button id="btnRecord" class="btn" style="background-color: green;">录制</button>
+        <button id="btnStop"  class="btn" style="background-color: red;">停止</button>
     </div>
-
     <hr>
     <div>
         录制视频列表：
     </div>
     <div id="list" class="list">
-
     </div>
 
     <video id="fplayer" class="f-player" autoplay controls></video>
-
-
     <script src="./idb-keyval.js"></script>
     <script>
         let mediaRecorder;
@@ -127,15 +122,8 @@
 
                 list.appendChild(divEl);
             });
-
-
         }
-
         listHistory();
-
-
     </script>
-
 </body>
-
 </html>
