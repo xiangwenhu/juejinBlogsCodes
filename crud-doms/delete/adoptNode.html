@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>adoptNode空白节点</title>
+</head>
+
+<body>
+
+  <ul class="list list-1">
+    <li class="item">list-one</li>
+    <li class="item">list-two</li>
+    <li class="item">list-three</li>
+  </ul> 
+  <!DOCTYPE html>
+  <html lang="en">
+  
+  <head>
+      <meta charset="UTF-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Document</title>
+  </head>
+  
+  <body>
+  
+      <ul class="list list-1">
+          <li class="item">list-one</li>
+          <li class="item">list-two</li>
+          <li class="item">list-three</li>
+      </ul>
+  
+  
+      <script>
+          function clearChildNodes(node) {
+              while (node.hasChildNodes()) {
+                  node.removeChild(node.firstChild);
+              }
+          }
+          const ul = document.querySelector(".list");
+          console.log("nodes:", ul.childNodes.length);  // 7
+          clearChildNodes(ul);
+          console.log("nodes:", ul.childNodes.length);  // 0
+  
+      </script>
+  
+  
+  </body>
+  
+  </html>
+  <script>
+
+    var ul = document.querySelector(".list");
+    console.log("li length", ul.children.length);  // 3
+    document.adoptNode(ul.children[0]); // adoptNode
+    console.log("li length", ul.children.length); // 2
+
+  </script>
+
+</body>
+
+</html>

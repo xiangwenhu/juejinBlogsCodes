@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>空白节点</title>
+</head>
+<body>
+    
+  <ul class="list list-1">text content
+    <li class="item">list-one</li>
+    <li class="item">list-two</li>
+    <li class="item">list-three</li>
+  </ul> 
+
+  <script>
+
+    var ul = document.querySelector(".list");
+    console.log("childNodes length:", ul.childNodes.length);  // 7
+
+    var firstNode = ul.childNodes[0];
+    console.log("nodeType:", firstNode.nodeType);  // 3 
+    console.log("content:", firstNode.textContent); // 
+  </script>
+</body>
+</html>

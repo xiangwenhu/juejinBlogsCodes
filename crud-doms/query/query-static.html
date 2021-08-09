@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>querySelectorAll返回的静态集合</title>
+
+  <script id="s-1"></script>
+</head>
+
+<body>
+
+  <ul class="list list-1">
+    <li class="item">list-one</li>
+    <li class="item">list-two</li>
+    <li class="item">list-three</li>
+  </ul>
+
+  <script>
+    var nodeList = document.querySelectorAll(".item");
+    console.log("len：", nodeList.length);
+
+    var liEl = document.createElement("li");
+    liEl.className = "item";
+    liEl.innerHTML = "list-for"
+    document.querySelector(".list").appendChild(liEl);
+
+    console.log("len：", nodeList.length);
+  </script>
+
+</body>
+
+</html>

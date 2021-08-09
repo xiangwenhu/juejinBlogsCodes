@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>outerHTML删除节点</title>
+</head>
+
+<body>
+
+  <ul class="list list-1">
+    <li class="item">list-one</li>
+    <li class="item">list-two</li>
+    <li class="item">list-three</li>
+  </ul> 
+
+  <script>
+
+    var ul = document.querySelector(".list");
+    console.log("li length", ul.children.length);  // 3
+    ul.children[0].outerHTML = null
+    console.log("li length", ul.children.length); // 2
+
+  </script>
+
+</body>
+
+</html>
