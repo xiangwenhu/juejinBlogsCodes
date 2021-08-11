@@ -1,49 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>视频录制</title>
+    <script src="./eruda.min.js"></script>
+    <script>
+        eruda.init()
+    </script>
     <style>
         html,
         body {
             margin: 0;
             position: relative;
         }
+
         video {
-            width: 60%;       
+            width: 60%;
             margin: auto;
             display: block;
             max-height: 400px;
         }
-        .list{
+
+        .list {
             padding-left: 10px;
             color: #2440b3;
             cursor: pointer;
         }
-        .f-player{
+
+        .f-player {
             position: fixed;
             right: 0;
             top: 40%;
-            width: 60%;   
-            display: none;   
+            width: 60%;
+            display: none;
         }
 
         .btn {
             font-weight: 700;
             color: #fff;
-            
+
         }
     </style>
 </head>
+
 <body>
     <div>
-        <video id="videoEL" controls autoplay></video>
+        <video id="videoEL"></video>
     </div>
     <div style="text-align: center; margin-top: 10px;">
         <button id="btnRecord" class="btn" style="background-color: green;">录制</button>
-        <button id="btnStop"  class="btn" style="background-color: red;">停止</button>
+        <button id="btnStop" class="btn" style="background-color: red;">停止</button>
     </div>
     <hr>
     <div>
@@ -52,79 +61,91 @@
     <div id="list" class="list">
     </div>
 
-    <video id="fplayer" class="f-player" autoplay controls></video>
+    <video id="fplayer" class="f-player" autoplay controls crossorigin></video>
     <script src="./idb-keyval.js"></script>
     <script>
-        let mediaRecorder;
-        async function init() {
-            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-                return console.log("getUserMedia not supported on your browser!")
-            }
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({
-                    video: { facingMode: "environment" },
-                    audio: true
-                })
-                videoEL.srcObject = stream;
-                mediaRecorder = new MediaRecorder(stream, { mimeType: "video/webm" });
 
-            } catch (err) {
-                alert(err);
-                return console.error("error:", err);
-            }
-        };
-
-        init();
-
-        function startRecord(recorder) {
-            var chunks = [];
-            recorder.ondataavailable = function (e) {
-                chunks.push(e.data);
-            }
-
-            recorder.onstop = async () => {
-                var clipName = prompt('请输入视频的名字');
-                var blob = new Blob(chunks, { 'type': 'audio/mp4;' });
-
-                await idbKeyval.set(clipName + ".mp4", blob);
-                listHistory();
-            }
+        videoEL.onerror = function(err){
+            console.log("error", err);
         }
+        console.log("开始了");
+        try {
+            let mediaRecorder;
+            async function init() {
+                if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                    return console.log("getUserMedia not supported on your browser!")
+                }
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({
+                        video: { facingMode: "environment" , width: 400, height: 600 },
+                        // audio: true
+                    })
+                    console.log("got stream:", stream.active);
+                    videoEL.srcObject = stream;
+                    videoEL.play();
+                    mediaRecorder = new MediaRecorder(stream, { mimeType: "video/webm;codecs=vp8,opus" });
 
-        btnRecord.addEventListener("click", () => {
-            startRecord(mediaRecorder);
-            mediaRecorder.start();
-        });
+                } catch (err) {
+                    alert(err);
+                    return console.error("error:", err);
+                }
+            };
 
-        btnStop.addEventListener("click", () => {
-            mediaRecorder.stop();
-        })
+            init();
 
+            function startRecord(recorder) {
+                var chunks = [];
+                recorder.ondataavailable = function (e) {
+                    chunks.push(e.data);
+                }
 
-        async function playVideo(key) {
-            const blob = await idbKeyval.get(key);
+                recorder.onstop = async () => {
+                    var clipName = prompt('请输入视频的名字');
+                    var blob = new Blob(chunks, { 'type': 'audio/mp4;' });
 
-            fplayer.src = URL.createObjectURL(blob);
-            fplayer.style.display = "block";
-            fplayer.play();
+                    await idbKeyval.set(clipName + ".mp4", blob);
+                    listHistory();
+                }
+            }
 
-        }
-
-        async function listHistory() {
-            list.innerHTML = null;
-            const keys = await idbKeyval.keys();
-            console.log("keys:", keys);
-
-            keys.filter(k => k.endsWith(".mp4")).forEach(key => {
-                const divEl = document.createElement("div");
-                divEl.textContent = key;
-                divEl.onclick = () => playVideo(key);
-
-                list.appendChild(divEl);
+            btnRecord.addEventListener("click", () => {
+                startRecord(mediaRecorder);
+                mediaRecorder.start();
             });
+
+            btnStop.addEventListener("click", () => {
+                mediaRecorder.stop();
+            })
+
+
+            async function playVideo(key) {
+                const blob = await idbKeyval.get(key);
+                fplayer.src = URL.createObjectURL(blob);
+                fplayer.style.display = "block";
+                fplayer.play();
+            }
+
+            idbKeyval.clear();
+            async function listHistory() {
+                list.innerHTML = null;
+                const keys = await idbKeyval.keys();
+                console.log("keys:", keys);
+
+                keys.filter(k => k.endsWith(".mp4")).forEach(key => {
+                    const divEl = document.createElement("div");
+                    divEl.textContent = key;
+                    divEl.onclick = () => playVideo(key);
+
+                    list.appendChild(divEl);
+                });
+            }
+
+            listHistory();
+
+        } catch (err) {
+            console.log("err:", err);
         }
-        
-        listHistory();
     </script>
 </body>
+
 </html>
