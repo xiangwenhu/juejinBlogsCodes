@@ -1,0 +1,41 @@
+html, body {
+    margin: 0;
+    height: 100%;
+}
+
+.main {
+    min-height: 80vh;
+    padding-top: 50px;
+}
+
+.hide {
+    display: none;
+}
+
+.lk-title {
+    width: 486px;
+    margin: auto;
+}
+
+.main .box .left_part {
+    margin: auto;
+}
+
+@media screen and (max-width: 486px) {
+    body {
+        background-color: lightblue;
+    }
+    body .main {
+        padding: 0;
+        padding-top: 50px;
+    }
+    body .main .box .left_part {
+        width: 100%;
+        flex-shrink: 0;
+        margin-right: 0;
+    }
+    body .lk-title {
+        width: 100%;
+        margin: auto;
+    }
+}
