@@ -1,31 +1,35 @@
 var options = {
 };
-
 var lottery = new Lottery(options);
+
 var lotteryEl = document.querySelector(".item-container");
 
 var dialogEl = document.querySelector(".lottery_modal");
 
-function removeChoseClass() {
+function removeChosenClass() {
     var el = lotteryEl.querySelector('.turntable-item.chosen');
     if (el) {
         el.classList.remove('chosen');
     }
 }
 
-lottery.onStart = function (ins, index, cycle) {
-    removeChoseClass();
+function addChosenClass(index){
     lotteryEl.querySelector('.turntable-item.turntable-item-' + index).classList.add('chosen');
+}
+
+lottery.onStart = function (ins, index, cycle) {
+    removeChosenClass();
+    addChosenClass(index);
 }
 
 lottery.onUpdate = function (ins, index, times) {
-    removeChoseClass();
-    lotteryEl.querySelector('.turntable-item.turntable-item-' + index).classList.add('chosen');
+    removeChosenClass();
+    addChosenClass(index);
 }
 
 lottery.onEnded = function (ins, index, prizeIndexes) {
-    removeChoseClass();
-    lotteryEl.querySelector('.turntable-item.turntable-item-' + index).classList.add('chosen');
+    removeChosenClass();
+    addChosenClass(index);
 
     setTimeout(function () {
         dialogEl.classList.remove("hide");

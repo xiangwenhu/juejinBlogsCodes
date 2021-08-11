@@ -1,16 +1,13 @@
 (function () {
-
-
     function isFunction(fn){
         return typeof fn === "function";
     }
-
     var defaultOption = {
         startIndex: 0, // 初始位置
-        pits: 8,  // 当前位置
+        pits: 8,  // 格子数
         interval: 100, // 初始间隔
         rate: 2.5,  // 系数
-        cycle: 3,  //转动基本次数：即至少需要转动多少次再进入抽奖环节
+        cycle: 5,  //转动基本次数：即至少需要转动多少次再进入抽奖环节
         getInterval: null // 自定义旋转间隔函数
         //onStart: null, // 当开始
         //onUpdate: null, // 旋转一次
@@ -19,7 +16,6 @@
     };
 
     var slice = Array.prototype.slice;
-
     function Lottery(options) {
         this.originOptions = options;
         this.options = Object.assign({}, defaultOption, options);
@@ -104,8 +100,6 @@
         }
     }
 
-
-
     Lottery.prototype.stop = function () {
         this.clearJob();
         this.animatingResult = false;
@@ -158,7 +152,6 @@
         this.animatingResult = true
     }
 
-
     Lottery.prototype.printInfo = function () {
         var now = Date.now();
         console.log('index:', this.index, 'times:', this.times, 'cycle:', this.cycle, 'interval:', now - this.lastTime);
@@ -166,5 +159,4 @@
     }
 
     window.Lottery = Lottery
-
 })()
