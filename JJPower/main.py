@@ -113,9 +113,9 @@ def summaryAndTopItems(articles):
         comment_count += art["comment_count"]
 
     # 总收藏数
-    result["collect_count"] = collect_count
+    result["total_collect_count"] = collect_count
     # 总评论数
-    result["comment_count"] = comment_count
+    result["total_comment_count"] = comment_count
 
     # 点赞
     s1 = sorted(
@@ -132,6 +132,7 @@ def summaryAndTopItems(articles):
     # 阅读
     s1 = sorted(
         articles, key=lambda article: article["view_count"], reverse=True)[0:3]
+        
     result["view_count"] = s1
 
     return result
