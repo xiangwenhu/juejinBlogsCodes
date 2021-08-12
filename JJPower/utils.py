@@ -18,11 +18,15 @@ headers = {
 # got_digg_count 被赞数
 # got_view_count 文章阅读总数
 
-def getJSONData(url, data = {}, method = "get"):
+def getJSONData(url, data={}, method="get"):
     if method == "post":
-        return requests.post(url, data=json.dumps(data), headers=headers).json()
+        res = requests.post(url, data=json.dumps(data), headers=headers)
+        res.encoding = "utf-8"
+        return res.json()
     else:
-        return requests.get(url, headers=headers).json()
+        res = requests.get(url, headers=headers)
+        res.encoding = "utf-8"
+        return res.json()
 
 
 def ensureDir(dir):
@@ -39,6 +43,18 @@ def appendFile(path, content):
         f.write(content)
 
 
+def saveFile(path, content):
+    with open(path, "w", encoding="utf-8") as f:
+        f.write(content)
+
+
 def readFile(path):
     with open(path, "r", encoding="utf-8") as f:
         return f.read()
+
+
+def copyObject(obj, keys = []):
+    ret = {};
+    for k in keys:
+        ret[k] = obj[k]
+    return ret;
