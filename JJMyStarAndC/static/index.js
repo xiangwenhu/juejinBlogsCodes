@@ -112,7 +112,7 @@ function renderList(list = []) {
     tbodyListEl.innerHTML = groupList.map(d => {
         return `
             <tr>
-                <td><a href="https://juejin.cn/user/${d.user_id}">${d.user_name}</a></td>
+                <td><a href="https://juejin.cn/user/${d.user_id}" target="_blank">${d.user_name}</a></td>
                 <td class="count">${d.count}</td>           
             </tr>      
         `
