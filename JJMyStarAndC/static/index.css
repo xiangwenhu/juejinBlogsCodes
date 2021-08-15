@@ -1,0 +1,141 @@
+#root {
+    padding-top: 20px;
+    max-width: 80vw;
+    margin: auto;
+    width: 500px;
+}
+
+table {
+    max-width: 500px;
+    min-width: 400px;
+}
+
+.c-total {
+    display: flex;
+    min-width: 360px;
+    font-size: 14px;
+    color: #999aaa;
+    line-height: 40px;
+}
+
+.c-total div{
+    flex: 0 0 50%;
+}
+
+table thead {
+    text-align: center;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+table.hovertable {
+    font-family: verdana, arial, sans-serif;
+    font-size: 11px;
+    color: #333333;
+    border-width: 1px;
+    border-color: #999999;
+    border-collapse: collapse;
+}
+
+table.hovertable th {
+    background-color: #c3dde0;
+    border-width: 1px;
+    padding: 8px;
+    border-style: solid;
+    border-color: #a9c6c9;
+}
+
+table.hovertable tr {
+    background-color: #d4e3e5;
+}
+
+table.hovertable td {
+    border-width: 1px;
+    padding: 8px;
+    border-style: solid;
+    border-color: #a9c6c9;
+}
+
+.mytxt {
+    min-width: 250px;
+    color: #333;
+    line-height: normal;
+    font-family: "Microsoft YaHei", Tahoma, Verdana, SimSun;
+    font-style: normal;
+    font-variant: normal;
+    font-size-adjust: none;
+    font-stretch: normal;
+    font-weight: normal;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    margin-left: 0px;
+    padding-top: 4px;
+    padding-right: 4px;
+    padding-bottom: 4px;
+    padding-left: 4px;
+    font-size: 15px;
+    outline-width: medium;
+    outline-style: none;
+    outline-color: invert;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+    text-shadow: 0px 1px 2px #fff;
+    background-attachment: scroll;
+    background-repeat: repeat-x;
+    background-position-x: left;
+    background-position-y: top;
+    background-size: auto;
+    background-origin: padding-box;
+    background-clip: border-box;
+    background-color: rgb(255, 255, 255);
+    margin-right: 8px;
+    border-top-color: #ccc;
+    border-right-color: #ccc;
+    border-bottom-color: #ccc;
+    border-left-color: #ccc;
+    border-top-width: 1px;
+    border-right-width: 1px;
+    border-bottom-width: 1px;
+    border-left-width: 1px;
+    border-top-style: solid;
+    border-right-style: solid;
+    border-bottom-style: solid;
+    border-left-style: solid;
+}
+
+button {
+    padding: 6px;
+    background-color: #428bca;
+    border-color: #357ebd;
+    color: #fff;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    /* future proofing */
+    -khtml-border-radius: 10px;
+    /* for old Konqueror browsers */
+    text-align: center;
+    vertical-align: middle;
+    border: 1px solid transparent;
+    font-weight: 700;
+    letter-spacing: 5px;
+    text-align: center;
+}
+
+.text {
+    width: 350px;
+    height: 200px;
+    position: absolute;
+    left: 20%;
+    margin-left: -150px;
+    background-image: -webkit-linear-gradient(left, blue, #66ffff 10%, #cc00ff 20%, #CC00CC 30%, #CCCCFF 40%, #00FFFF 50%, #CCCCFF 60%, #CC00CC 70%, #CC00FF 80%, #66FFFF 90%, blue 100%);
+    -webkit-text-fill-color: transparent;
+    /* 将字体设置成透明色 */
+    -webkit-background-clip: text;
+    /* 裁剪背景图，使文字作为裁剪区域向外裁剪 */
+    -webkit-background-size: 200% 100%;
+    -webkit-animation: masked-animation 4s linear infinite;
+    font-size: 35px;
+}
