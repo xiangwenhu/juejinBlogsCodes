@@ -39,8 +39,6 @@ function startSSE(uid, rid) {
     // 收到新数据
     source.addEventListener('message', function (e) {
         let data = JSON.parse(e.data)
-        // console.log("meesage", data);
-
         // 不是需要的数据
         if (data.uid != uid || data.rid != rid) {
             return;
@@ -56,13 +54,11 @@ function startSSE(uid, rid) {
     // 收到总数据消息
     source.addEventListener('messageTotal', function (e) {
         let data = JSON.parse(e.data)
-        // console.log("messageTotal", data);
 
         // 不是需要的数据
         if (data.uid != uid || data.rid != rid) {
             return;
         }
-
         totalStarsEl.innerHTML = data.count;
     }, false)
 

@@ -27,7 +27,6 @@ app.get('/sseStream', function (request, response) {
     response.write("event: " + String(event) + "\n" + "data: " + JSON.stringify(data) + "\n\n");
 
   });
-
 });
 
 
