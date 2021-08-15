@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>加载进度条</title>
+    <style>
+        html,
+        body {
+            height: 100%;
+            cursor: pointer;
+        }
+        body {
+            padding-top: 100px;
+            background-color: rgba(0, 0, 0)
+        }
+        .outer {
+            margin: auto;
+            width: 90%;
+            height: 10px;
+            border-radius: 8px;
+            background-color : #000;
+            border-left: 2px solid rgba(0, 198, 255, .3);
+            border-top: 2px solid rgba(0, 198, 255, .3);
+            border-right: 2px solid rgba(0, 198, 255, .3);
+            border-bottom: 2px solid rgba(0, 198, 255, .3);
+        }
+        .inner {
+            height: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 198, 255, 1) inset;
+            width: 0;
+            border-radius: 8px;
+        }
+
+        .ts {
+            transition: width 5000ms ease 20ms;
+        }
+
+        .title {
+            text-align: center;
+            margin: 10px;
+            color: #fff;
+        }
+
+        .progress {
+            width: 100%;
+        }
+    </style>
+</head>
+
+
+<body>
+
+    <div class="title">
+        来来来， 点击任何地方开始加载
+    </div>
+    <div class="outer">
+        <div class="inner"></div>
+    </div>
+
+
+    <script>
+
+        var innerEl = document.querySelector(".inner");
+        function reset() {
+            innerEl.classList.remove("progress");
+            innerEl.classList.remove("ts");
+
+        }
+        document.body.addEventListener("click", function () {
+            reset();
+            window.getComputedStyle(document.body);
+            requestAnimationFrame(function () {
+                innerEl.classList.add("ts");
+                if (!innerEl.classList.contains("progress")) {
+                    innerEl.classList.add("progress");
+                }
+            })
+        })
+
+    </script>
+
+</body>
+
+</html>

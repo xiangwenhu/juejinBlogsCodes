@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>简单的运动</title>
+    <style>
+        .bg-red {
+            background-color: red;
+        }
+
+        .bg-green {
+            background-color: green;
+        }
+
+        .bg-blue {
+            background-color: blue;
+        }
+
+
+        .bg-sliver {
+            background-color: silver;
+        }
+
+        .bg-aqua {
+            background-color: aqua
+        }
+
+        .transition div {
+            height: 100px;
+            width: 100px;
+            position: relative;
+            left: 0;
+        }
+
+        .transition-s {
+            transition-property: left;
+            transition-duration: 3000ms;
+        }
+
+        .transition-fn-ease {
+            transition-timing-function: ease;
+        }
+
+        .transition-fn-ease-in {
+            transition-timing-function: ease-in;
+        }
+
+        .transition-fn-linear {
+            transition-timing-function: linear;
+        }
+
+        .transition-fn-ease-out {
+            transition-timing-function: ease-out;
+        }
+
+        .transition-fn-ease-in-out {
+            transition-timing-function: ease-in-out;
+        }
+
+        .transition.ani div{
+            left: calc(100% - 100px);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="transition">
+        <div class="bg-red transition-s transition-fn-ease" data-t="ease">ease</div>
+        <div class="bg-green transition-s transition-fn-linear" data-t="linear">linear</div>
+        <div class="bg-blue transition-s transition-fn-ease-in" data-t="ease-in">ease-in</div>
+        <div class="bg-sliver transition-s transition-fn-ease-out" data-t="ease-out">ease-out</div>
+        <div class="bg-aqua transition-s transition-fn-ease-in-out" data-t="ease-in-out">ease-in-out</div>
+    </div>
+    <div>
+    <button id="btnStart">开始</button>
+    </div>
+
+    <script>
+
+        var el = document.querySelector(".transition");
+        document.getElementById("btnStart").addEventListener("click", function(){
+            el.classList.add("ani");
+        })
+
+        document.querySelector(".transition-s").addEventListener("transitionend", function(){
+            el.classList.remove("ani");
+        })
+
+
+
+    </script>
+
+</body>
+
+</html>

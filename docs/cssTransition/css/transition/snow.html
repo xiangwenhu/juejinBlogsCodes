@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Snow</title>
+    <style>
+        body {
+            background-color: black;
+            overflow: hidden;
+            height: 100vh;
+            cursor: pointer;
+        }
+
+        .ts {
+            transition-property: all;
+            transition-timing-function: ease;
+        }
+
+
+        img {
+            height: 15px;
+            position: absolute;
+            top: 0;
+            left: 50vw;
+            transform: translate(-50%);
+        }
+    </style>
+</head>
+
+<body>
+</body>
+<script>
+
+    var animating = false;
+    var created = false;
+    function createSnows() {
+        if (created) {
+            return
+        }
+        for (var i = 0; i < 800; i++) {
+            var img = document.createElement("img");
+            img.src = "./snow.png";
+            img.className = "ts";
+
+            var w = (10 + Math.round(Math.random() * 30)) + "px";
+            img.style.width = w;
+            img.style.height = w;
+            document.body.appendChild(img)
+        }
+        created = true;
+    }
+
+    function updateSnows() {
+        [...document.images].forEach(function (el, i) {
+            el.classList.add("ts");
+            el.style.transitionDuration = 3000 + Math.floor(Math.random() * i * 1000/800 ) + "ms";
+            el.style.left = 50 + (Math.random() > 0.49 ? 1 : -1) * Math.random() * 200 + "vw";
+            el.style.top = 100 + 1 * Math.round(Math.random() * 50) + "vh";
+            el.style.transitionTimingFunction = `cubic-bezier(${Math.random().toFixed(2)},${Math.random().toFixed(2)},${Math.random().toFixed(2)},${Math.random().toFixed(2)})`
+        })
+    }
+
+    function resetSnows() {
+        [...document.images].forEach(function (el, i) {
+            el.style.transition = "";
+            el.style.top = "0";
+            el.style.left = "50vw";
+            el.classList.remove("ts");
+        })
+    }
+
+    createSnows();
+
+    document.body.addEventListener("click", function () {
+        resetSnows();
+        window.getComputedStyle(document.body);
+        requestAnimationFrame(updateSnows)
+    })
+
+
+</script>
+
+</html>

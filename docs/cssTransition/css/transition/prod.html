@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>购物车抛物线</title>
+    <style>
+        html,
+        body {
+            margin: 0
+        }
+
+        body {
+            position: relative;
+        }
+
+        .container {
+            /* width: 30vw; */
+            margin: auto;
+            height: 94vh;
+            background-color: #fff4e8;
+            position: relative;
+            padding-top: 50px;
+        }
+
+        .container section {
+            display: flex;
+            margin: 8px;
+            max-width: 500px;
+            margin: auto;
+        }
+
+        .container section div {
+            align-self: center;
+        }
+
+        .container .add-car {
+            background: #e54346;
+            height: 30px;
+            text-align: center;
+            align-self: center;
+        }
+
+        .fixed-bottom {
+            position: fixed;
+            bottom: 0px;
+            z-index: 999;
+            width: 100vw;
+            height: 6vh;
+        }
+
+        .bottom-wrapper {
+            width: 30vw;
+            margin: auto;
+            border: silver solid 1px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .car {
+            height: 5vh;
+            margin-left: 10px;
+        }
+
+        .prod-img {
+            border: 1px solid #eee;
+        }
+
+        .moving-point {
+            height: 20px;
+            position: absolute;
+            display: none;
+            transform: translate(-50%, -50%);
+            z-index: 999;
+        }
+
+        @media screen and (max-width: 500px) {
+            .container section{
+                max-width: 100vw;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <section>
+            <img class="prod-img"
+                src="//img10.360buyimg.com/cms/s80x80_jfs/t18700/63/435443749/91471/d622467/5a780f67Nc9f4b35b.jpg">
+            <div>花王碧柔（Biore）轻透倍护防晒乳SPF50+ PA+++ 40ml 轻透</div>
+            <img src="./add.jpg" class="add-car" />
+        </section>
+        <section>
+            <img class="prod-img"
+                src="//img10.360buyimg.com/cms/s80x80_jfs/t18700/63/435443749/91471/d622467/5a780f67Nc9f4b35b.jpg">
+            <div>花王碧柔（Biore）轻透倍护防晒乳SPF50+ PA+++ 40ml 轻透</div>
+            <img src="./add.jpg" class="add-car" />
+        </section>
+        <section>
+            <img class="prod-img"
+                src="//img10.360buyimg.com/cms/s80x80_jfs/t18700/63/435443749/91471/d622467/5a780f67Nc9f4b35b.jpg">
+            <div>花王碧柔（Biore）轻透倍护防晒乳SPF50+ PA+++ 40ml 轻透</div>
+            <img src="./add.jpg" class="add-car" />
+        </section>
+        <section>
+            <img class="prod-img"
+                src="//img10.360buyimg.com/cms/s80x80_jfs/t18700/63/435443749/91471/d622467/5a780f67Nc9f4b35b.jpg">
+            <div>花王碧柔（Biore）轻透倍护防晒乳SPF50+ PA+++ 40ml 轻透</div>
+            <img src="./add.jpg" class="add-car" />
+        </section>
+        <section>
+            <img class="prod-img"
+                src="//img10.360buyimg.com/cms/s80x80_jfs/t18700/63/435443749/91471/d622467/5a780f67Nc9f4b35b.jpg">
+            <div>花王碧柔（Biore）轻透倍护防晒乳SPF50+ PA+++ 40ml 轻透</div>
+            <img src="./add.jpg" class="add-car" />
+        </section>
+        <section>
+            <img class="prod-img"
+                src="//img10.360buyimg.com/cms/s80x80_jfs/t18700/63/435443749/91471/d622467/5a780f67Nc9f4b35b.jpg">
+            <div>花王碧柔（Biore）轻透倍护防晒乳SPF50+ PA+++ 40ml 轻透</div>
+            <img src="./add.jpg" class="add-car" />
+        </section>
+
+    </div>
+
+    <div class="fixed-bottom">
+        <div class="bottom-wrapper">
+            <img src="./car.jpg" alt="" class="car">
+        </div>
+
+    </div>
+
+    <img src="./add.jpg" alt="" class="moving-point">
+
+    <script>
+
+        var animating = false;
+        var carEl = document.querySelector(".car");
+        var pointEl = document.querySelector(".moving-point");
+
+        document.querySelector(".container").addEventListener("click", function (ev) {
+            const el = ev.target;
+            if (el.classList.contains("add-car")) {
+                if (animating) {
+                    return;
+                }
+                animating = true;
+                reset();
+                var sourcePos = {
+                    x: ev.x,
+                    y: ev.y
+                };
+
+                pointEl.style.top = numberToPx(sourcePos.y);
+                pointEl.style.left = numberToPx(sourcePos.x);
+                pointEl.style.display = "block";
+
+                window.getComputedStyle(document.body);
+
+                requestAnimationFrame(transition)
+            }
+        })
+
+
+        function reset() {
+            pointEl.style.transition = "";
+        }
+
+        function transition() {
+            var targetPos = getTargetPos();
+
+            pointEl.style.transition = `top 500ms ease-in,left 500ms linear`;
+            pointEl.style.top = numberToPx(targetPos.y);
+            pointEl.style.left = numberToPx(targetPos.x);
+        }
+
+
+        function numberToPx(n) {
+            return n + "px";
+        }
+
+
+        function getTargetPos() {
+            var pos = carEl.getBoundingClientRect();
+            return {
+                x: pos.x + pos.width / 2,
+                y: pos.y + pos.height / 2
+            }
+        }
+
+        pointEl.addEventListener("transitionend", function () {
+            animating = false;
+            pointEl.style.transition = "";
+            pointEl.style.display = "none";
+        })
+
+
+    </script>
+
+</body>
+
+</html>
