@@ -8,4 +8,5 @@
 * [没了jquery, vue, react，你还会DOM节点的增删改查吗？](./crud-doms)
 * [掘金的抽奖，拆穿她，然后实现一个，顺便封装一个库](./luckDraw) 
 * [掘金签约作者，战力参数分析](./JJPower)
-* [四个案列，带入走进 CSS transition](./docs/r)
+* [四个案列，带入走进 CSS transition](./docs/cssTransition)
+* [【玩转掘金】我的赞，我的💗，都给了谁](./JJMyStarAndC)
