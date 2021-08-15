@@ -122,6 +122,7 @@ button {
     font-weight: 700;
     letter-spacing: 5px;
     text-align: center;
+    cursor: pointer;
 }
 
 .text {
