@@ -6,12 +6,16 @@
 ```js
     cd ./JJMyStarAndC
 ```
-3. 启动服务
+3. 安装依赖
+```js
+npm install 
+```
+4. 启动服务
 ```js
     npm run serve
 ```
-4. 浏览器打开 `http://localhost:8088/index.html`
-5. 输入用户ID，点击按钮即可
+5. 浏览器打开 `http://localhost:8088/index.html`
+6. 输入用户ID，点击按钮即可
 
 
 ## 注意
