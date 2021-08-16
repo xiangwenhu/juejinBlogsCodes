@@ -1,4 +1,6 @@
 
+let isDone = false;
+
 // 提交事件部分
 const regUid = /^[0-9]*$/
 const uidEl = document.getElementById("inputUserId");
@@ -38,6 +40,11 @@ function startSSE(uid, rid) {
 
     // 收到新数据
     source.addEventListener('message', function (e) {
+
+        if (isDone) {
+            return;
+        }
+
         let data = JSON.parse(e.data)
         // 不是需要的数据
         if (data.uid != uid || data.rid != rid) {
@@ -64,6 +71,7 @@ function startSSE(uid, rid) {
 
     // 统计完毕
     source.addEventListener('messageEnd', function (e) {
+        isDone = true;
         let data = JSON.parse(e.data)
         console.log("meesage", data);
     }, false)
@@ -90,8 +98,10 @@ function renderList(list = []) {
     const statObj = list.reduce((obj, cur) => {
         if (hasOwnProperty.call(obj, cur.user_id)) {
             obj[cur.user_id].count += 1;
+            obj[cur.user_id].items.push(cur);
         } else {
             obj[cur.user_id] = {
+                items: [cur],
                 count: 1,
                 ...cur
             };
@@ -101,17 +111,49 @@ function renderList(list = []) {
 
     // 分组
     const groupList = Object
-        .keys(statObj) 
+        .keys(statObj)
         .map(k => statObj[k])  //分组
         .sort((a, b) => a.count > b.count ? -1 : 1);  // 排序
 
+    // 挂载到全局
+    window._statObj_ = statObj || {};
     tbodyListEl.innerHTML = groupList.map(d => {
         return `
             <tr>
-                <td><a href="https://juejin.cn/user/${d.user_id}" target="_blank">${d.user_name}</a></td>
-                <td class="count">${d.count}</td>           
+                <td><b><a href="https://juejin.cn/user/${d.user_id}" target="_blank">${d.user_name}</a></b> </td>
+                <td class="count">${d.count}</td>
+                <td class="td-detail"> <a data-id="${d.user_id}" href="javascript:void(0)" class="link-detail">查看详情</a> </td>           
             </tr>      
         `
     }).join("")
 
 }
+
+
+const modalEl = document.getElementById("modal-detail");
+const uStarList = document.getElementById("u-star-list");
+const closeEl = document.querySelector("#modal-detail .close")
+
+closeEl.addEventListener("click", function () {
+    modalEl.style.display = "none"
+})
+
+tbodyListEl.addEventListener("click", function (ev) {
+
+    if (ev.target.tagName.toUpperCase() !== "A" || !ev.target.classList.contains("link-detail")) {
+        return;
+    }
+
+    modalEl.style.display = "block";
+    const uid = + ev.target.dataset.id;
+    const list = (window._statObj_[uid] || {})["items"] || [];
+
+    uStarList.innerHTML = `
+        ${list.map(item => {
+        return `<li><a href="https://juejin.cn/post/${item.aid}" target="_blank">${item.title}</a></li>`
+    }).join("")
+        }
+    
+    `
+
+});

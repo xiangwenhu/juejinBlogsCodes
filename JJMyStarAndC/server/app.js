@@ -82,7 +82,8 @@ async function getStars(uid, rid) {
       datas: (res.data || []).map(d => ({
         user_id: d.author_user_info.user_id,
         user_name: d.author_user_info.user_name,
-        title: d.article_info.title
+        title: d.article_info.title,
+        aid: d.article_id
       }))
     });
 
