@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>动态</title>
+    <style>
+        body {
+            display: flex;
+        }
+
+        canvas {
+            outline: dotted 1px darkorange;
+        }
+
+        .container {
+            position: relative;
+            height: 300px;
+            width: 300px;
+        }
+
+        .control-point {
+            position: absolute;
+            z-index: 1;
+            height: 20px;
+            width: 20px;
+            border: 1px solid rgba(0, 0, 0, .3);
+            outline: none;
+            box-sizing: border-box;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        #P0 {
+            bottom: -10px;
+            left: -10px;
+        }
+
+        #P3 {
+            right: -10px;
+            top: -10px;
+        }
+
+        #P0,
+        #P3 {
+            background: white;
+        }
+
+        #P1,
+        #P2 {
+            transform: translate(-50%, -50%)
+        }
+
+        .info {
+            margin-left: 30px;
+        }
+
+        .active {
+            background-color: burlywood;
+        }
+    </style>
+</head>
+
+<body>
+
+
+    <div class="container">
+        <span class="control-point" id="P0">0</span>
+        <button class="control-point" id="P1">1</button>
+        <button class="control-point" id="P2">2</button>
+        <span class="control-point" id="P3">3</span>
+        <canvas id="bg" height="300" width="300" style="position: absolute; z-index: 0"></canvas>
+
+    </div>
+    <div class="info">
+        P1: <span id="p1Info"></span>
+        P2: <span id="p2Info"></span>
+        <hr>
+        <div id="builtInFn">
+            <input type="button" data-fp="ease" value="ease" class="active">
+            <input type="button" data-fp="linear" value="linear">
+            <input type="button" data-fp="ease-in" value="ease-in">
+            <input type="button" data-fp="ease-out" value="ease-out">
+            <input type="button" data-fp="ease-in-out" value="ease-in-out">
+        </div>
+    </div>
+
+    <script>
+        const BUILDIN_FUN = {
+            "ease": [{ x: .25, y: .1 }, { x: .25, y: 1 }],
+            "linear": [{ x: 0, y: 0 }, { x: 1, y: 1 }],
+            "ease-in": [{ x: 0.42, y: 0 }, { x: 1, y: 1 }],
+            "ease-out": [{ x: 0, y: 0 }, { x: 0.58, y: 1 }],
+            "ease-in-out": [{ x: 0.42, y: 0 }, { x: 0.58, y: 1 }]
+        }
+        const SIDE_LENGTH = 300;
+        const POINT_RADIUS = 10;
+        let POINT_ONE = { x: 0.25 * SIDE_LENGTH, y: SIDE_LENGTH - 0.1 * SIDE_LENGTH };
+        let POINT_TWO = { x: 0.25 * SIDE_LENGTH, y: SIDE_LENGTH - 1 * SIDE_LENGTH };
+        const p1El = document.querySelector("#P1");
+        const p2El = document.querySelector("#P2");
+
+
+        // https://blog.csdn.net/a419419/article/details/79317773/ 
+        function getEventPosition(ev) {
+            var x, y;
+            if (ev.layerX || ev.layerX == 0) {
+                x = ev.layerX;
+                y = ev.layerY;
+            } else if (ev.offsetX || ev.offsetX == 0) { // Opera
+                x = ev.offsetX;
+                y = ev.offsetY;
+            }
+            return { x: x, y: y };
+        }
+
+
+        const canvas = document.getElementById("bg");
+        const ctx = canvas.getContext("2d");
+
+        function baseLine() {
+            ctx.beginPath();
+            ctx.moveTo(0, 300);
+            ctx.bezierCurveTo(0, 300, 300, 0, 300, 0);
+            ctx.stroke();
+        }
+
+        function listen() {
+            canvas.addEventListener("click", function (ev) {
+                const pos = getEventPosition(ev);
+                console.log(pos);
+                const point = getNearPoint(pos);
+
+                point.x = pos.x;
+                point.y = pos.y;
+
+                reDraw();
+            })
+        }
+
+        function drawP1P2() {
+            p1El.style.top = POINT_ONE.y + "px";
+            p1El.style.left = POINT_ONE.x + "px";
+
+            p2El.style.top = POINT_TWO.y + "px";
+            p2El.style.left = POINT_TWO.x + "px";
+        }
+
+        function reDraw() {
+            ctx.clearRect(0, 0, SIDE_LENGTH, SIDE_LENGTH);
+            baseLine();
+            drawP1P2();
+            bezierCurveTo();
+            displayP1P2Info();
+        }
+
+        function bezierCurveTo() {
+            ctx.beginPath();
+            ctx.moveTo(0, 300);
+            ctx.bezierCurveTo(POINT_ONE.x, POINT_ONE.y, POINT_TWO.x, POINT_TWO.y, 300, 0);
+            ctx.stroke();
+        }
+
+        function getNearPoint(pos) {
+            const dis1 = Math.pow(Math.abs(pos.x - POINT_ONE.x), 2) + Math.pow(Math.abs(pos.y - POINT_ONE.y), 2);
+            const dis2 = Math.pow(Math.abs(pos.x - POINT_TWO.x), 2) + Math.pow(Math.abs(pos.y - POINT_TWO.y), 2);
+            return dis1 <= dis2 ? POINT_ONE : POINT_TWO;
+        }
+
+        function displayP1P2Info() {
+            p1Info.innerText = (POINT_ONE.x / 300).toFixed(2) + "," + ((SIDE_LENGTH - POINT_ONE.y) / 300).toFixed(2);
+            p2Info.innerText = (POINT_TWO.x / 300).toFixed(2) + "," + ((SIDE_LENGTH - POINT_TWO.y) / 300).toFixed(2);
+        }
+
+        function registerBuiltInFun() {
+            document.getElementById("builtInFn").addEventListener("click", function (ev) {
+
+                Array.from(document.getElementById("builtInFn").children).forEach(function (el) {
+                    el.classList.remove("active")
+                })
+
+                const el = ev.target;
+                const fnName = el.dataset["fp"];
+
+                const [point1, point2] = BUILDIN_FUN[fnName];
+
+                POINT_ONE = { x: point1.x * SIDE_LENGTH, y: SIDE_LENGTH - point1.y * SIDE_LENGTH };
+
+                POINT_TWO = { x: point2.x * SIDE_LENGTH, y: SIDE_LENGTH - point2.y * SIDE_LENGTH };
+
+                reDraw();
+
+            })
+        }
+
+        function init() {
+            baseLine();
+            drawP1P2();
+            bezierCurveTo();
+            displayP1P2Info();
+            registerBuiltInFun();
+            listen();
+        }
+
+
+        init();
+
+
+
+
+    </script>
+
+
+</body>
+
+</html>

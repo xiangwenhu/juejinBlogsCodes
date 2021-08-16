@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>贝塞尔曲线</title>
+    <style>
+        .bezier {
+            height: 500px;
+            width: 500px;
+            border: 1px dotted silver;
+            position: relative;
+        }
+
+        .dot {
+            border: 1px solid red;
+            position: absolute;
+            border-radius: 50%;
+        }
+
+        .bigDot {
+            border: 5px solid blue;
+            position: absolute;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        body {
+            width: 500px;
+            margin: 20px auto 20px auto;
+        }
+    </style>
+</head>
+
+<body>
+
+
+    <div>
+        <div>
+            一阶贝塞尔曲线
+        </div>
+        <div class="bezier firstOrder">
+
+        </div>
+    </div>
+    <hr>
+    <div>
+        <div class="controller-2">
+            二阶贝塞尔曲线
+            <p class="point">点1：
+                x:<input class="range" data-x type="range" min="0" max="500" value="100"><span class="value">100</span>
+                y:<input class="range" data-y type="range" min="0" max="500" value="200"><span class="value">200</span>
+            </p>
+        </div>
+        <div class="bezier secondOrder">
+
+        </div>
+
+    </div>
+    <div>
+        <div class="controller-3">
+            三阶贝塞尔曲线
+            <p class="point">点1：
+                x:<input class="range" data-x type="range" min="0" max="500" value="100"><span class="value">100</span>
+                y:<input class="range" data-y type="range" min="0" max="500" value="200"><span class="value">200</span>
+            </p>
+            <p class="point">点2：
+                x:<input class="range" data-x type="range" min="0" max="500" value="200"><span class="value">200</span>
+                y:<input class="range" data-y type="range" min="0" max="500" value="300"><span class="value">300</span>
+            </p>
+        </div>
+        <div class="bezier thirdOrder">
+
+        </div>
+
+    </div>
+    <script type="module" src="./js/index.mjs"></script>
+</body>
+
+</html>
