@@ -177,14 +177,17 @@ button {
 
 .u-star-list li {
     list-style: none;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    padding-right: 6px;
+
 }
 
 .u-star-list li a {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
     text-decoration: none;
     color: rgb(255, 225, 244);
+    display: block;
 }
 
 ::-webkit-scrollbar {
