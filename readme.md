@@ -10,3 +10,4 @@
 * [掘金签约作者，战力参数分析](./JJPower)
 * [四个案列，带入走进 CSS transition](./docs/cssTransition/css/transition/readme.md)
 * [【玩转掘金】我的赞，我的💗，都给了谁](./JJMyStarAndC)
+* [【玩转掘金】可视化智能抽奖，还能暂停哦！](./JJSignAndLD)
