@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+
+._jj_draw_container {
+        position:fixed;
+        top: 80px;
+        right: 0;
+        z-index: 9999;
+        background-color: rgba(0,0,0,0.6);
+        padding: 20px;
+    }
+
+        ._jj_button {
+            padding: 6px;
+            background-color: #428bca;
+            border-color: #357ebd;
+            color: #fff;
+            border-radius: 10px;
+            text-align: center;
+            vertical-align: middle;
+            border: 1px solid transparent;
+            font-weight: 700;
+            letter-spacing: 5px;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        ._jj_button:hover {
+            background-color: #1167b3;
+        }
+
+        table._jj_hovertable thead {
+            text-align: center;
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        table._jj_hovertable {
+            font-family: verdana, arial, sans-serif;
+            font-size: 11px;
+            color: #333333;
+            border-width: 1px;
+            border-color: #999999;
+            border-collapse: collapse;
+        }
+
+        table._jj_hovertable th {
+            background-color: #c3dde0;
+            border-width: 1px;
+            padding: 8px;
+            border-style: solid;
+            border-color: #a9c6c9;
+        }
+
+        table._jj_hovertable tr {
+            background-color: #d4e3e5;
+        }
+
+        table._jj_hovertable td {
+            border-width: 1px;
+            padding: 8px;
+            border-style: solid;
+            border-color: #a9c6c9;
+        }
+
+        ._jj_button_close{
+            font-size: 20px;
+            font-weight: 700;
+            position: absolute;
+            right: 20px;
+            color: #FFF;
+        }
+    </style>
+</head>
+
+<body>
+    
+    <div class="">
+        <div style="text-align:center;margin: 10px;">
+            <button id="_jj_btn_draw" type="button" class="_jj_button _jj_btn_draw">抽奖</button>
+            <button id="_jj_btn_stop" type="button" class="_jj_button">停止</button>
+            <a href="javascript:void(0)" id="_jj_btn_close" class="_jj_button_close">X</a>
+        </div>
+        <table class="_jj_hovertable">
+            <thead>
+                <tr>
+                    <td>奖品图标</td>
+                    <td>奖品名称</td>
+                    <td>中奖次数</td>
+                    <td>累计奖励</td>
+                </tr>
+            <tbody id="_jj_tbodyList">
+
+            </tbody>
+            </thead>
+        </table>
+    </div>
+
+
+    <script type="text/javascript" src="./index.js"></script>
+
+</body>
+
+</html>
