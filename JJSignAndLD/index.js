@@ -108,6 +108,7 @@
 
     function appendHTML(htmlContent) {
         const htmlEl = document.createElement('div');
+        htmlEl.id = "_jj_draw_container";
         htmlEl.className = "_jj_draw_container";
         htmlEl.innerHTML = htmlContent;
         document.body.appendChild(htmlEl);
@@ -171,12 +172,17 @@
         try {
             let errNo = 0;
             do {
+                if(!isDrawing){
+                    break;
+                }
+
                 const res = await doDraw();
                 errNo = res.err_no;
 
                 if (errNo !== 0) {
                     alert(res.err_msg);
                     isDrawing = false;
+                    break;
                 }
 
                 // 增加奖励
@@ -186,12 +192,15 @@
                 // 暂停16ms
                 await delay(undefined, 16).run();
 
-            } while (errNo = 0)
+                //isDrawing = false;
+                //break;
+
+            } while (errNo == 0)
 
         } catch (err) {
+            isDrawing = false
             alert(err.message);
         }
-
     }
 
     function addPrize(data) {
@@ -234,6 +243,7 @@
         prizes = lotteryConfig.map(c => ({
             lottery_id: c.lottery_id,
             lottery_name: c.lottery_name,
+            lottery_image: c.lottery_image,
             counts: 0
         }));
 
