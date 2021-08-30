@@ -1,0 +1,143 @@
+{
+  "err_no": 0,
+  "err_msg": "success",
+  "data": {
+    "article_id": "7002012595200720927",
+    "article_info": {
+      "article_id": "7002012595200720927",
+      "user_id": "131597122679661",
+      "category_id": "6809637767543259144",
+      "tag_ids": [
+        6809640407484334093,
+        6809640398105870343
+      ],
+      "visible_level": 0,
+      "link_url": "",
+      "cover_image": "https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ccaf6212cccc45dab4b146e19b10292e~tplv-k3u1fbpfcp-watermark.image",
+      "is_gfw": 0,
+      "title": "跨浏览器窗口通讯 ，7种方式，你还知道几种呢？",
+      "brief_content": "人与人要沟通，页面与页面之前也要沟通。页面间的7种基础交流方面，满足你的各种需求？ 您还有哪些高级的交流方式呢？",
+      "is_english": 0,
+      "is_original": 1,
+      "user_index": 13.07084320992232,
+      "original_type": 0,
+      "original_author": "",
+      "content": "",
+      "ctime": "1630283246",
+      "mtime": "1630284134",
+      "rtime": "1630284134",
+      "draft_id": "7000770008183734279",
+      "view_count": 6861,
+      "collect_count": 253,
+      "digg_count": 254,
+      "comment_count": 33,
+      "hot_index": 629,
+      "is_hot": 0,
+      "rank_index": 18.11158616,
+      "status": 2,
+      "verify_status": 1,
+      "audit_status": 2,
+      "mark_content": "---\nhighlight: a11y-dark\n---\n\n\n\n这是我参与8月更文挑战的第30天，活动详情查看：[8月更文挑战](https://juejin.cn/post/6987962113788493831 \"https://juejin.cn/post/6987962113788493831\")。\n\n## 前言\n\n\n为什么会扯到这个话题，最初是源于听 https://y.qq.com/ QQ音乐，\n*  播放器处于单独的一个页面 \n*  当你在另外的一个页面搜索到你满意的歌曲的时候，点击播放或添加到播放队列\n*  你会发现，播放器页面做出了响应的响应\n\n这里我又联想到了商城的购物车的场景，体验确实有提升。   \n刚开始，我怀疑的是Web Socket作妖，结果通过分析网络请求和看源码，并没有。 最后发现是localStore的storage事件作妖，哈哈。     \n\n------\n回归正题，其实在一般正常的知识储备的情况下，我们会想到哪些方案呢？  \n\n**先抛开如下方式：**\n1. 各自对服务器进行轮询或者长轮询\n2. 同源策略下，一方是另一方的 `opener`\n\n\n## 演示和源码\n\n**多页面通讯的demo**, 为了正常运行，请用最新的chrome浏览器打开。   \n**[demo的源码地址](https://github.com/xiangwenhu/page-communication/tree/master/docs)**\n\n* [首页](https://xiangwenhu.github.io/page-communication/)\n* [setInterval + sessionStorage](https://xiangwenhu.github.io/page-communication/setInterval/index.html)\n* [localStorage](https://xiangwenhu.github.io/page-communication/localStorage/index.html)\n* [BroadcastChannel](https://xiangwenhu.github.io/page-communication/BroadcastChannel/index.html)\n* [SharedWorker](https://xiangwenhu.github.io/page-communication/SharedWorker/index.html)\n\n## 两个浏览器窗口间通信\n\n\n\n### WebSocket\n  这个没有太多解释，WebSocket 是 HTML5 开始提供的一种在单个 TCP 连接上进行全双工通讯的协议。当然是有代价的，需要服务器来支持。  \n  js语言，现在比较成熟稳定当然是 [socket.io](https://github.com/socketio/socket.io)和[ws](https://github.com/websockets/ws). 也还有轻量级的[ClusterWS](https://github.com/ClusterWS/ClusterWS)。\n\n你可以在[The WebSocket API (WebSockets)\n](https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API)看到更多的关于Web Socket的信息。\n\n ### 定时器 + 客户端存储\n\n 定时器：setTimeout/setInterval/requestAnimationFrame    \n 客户端存储： cookie/localStorage/sessionStorage/indexDB/chrome的FileSystem   \n\n 定时器没啥好说的，关于客户端存储。\n* cookie: 每次会带到服务端，并且能存的并不大，4kb?，记得不太清楚\n* localStorage/sessionStorage 应该是5MB, sessionStorage关闭浏览器就和你说拜拜。\n* indexDB 这玩意就强大了，不过读取都是异步的，还能存 Blob文件，真的是很high。\n* chrome的FileSystem ,[Filesystem \u0026 FileWriter API](https://caniuse.com/#search=fileSystem),主要是chrome和opera支持。这玩意就是文件系统。\n\n\n\n ### postMessage\n[Cross-document messaging](https://caniuse.com/#search=postMessage) 这玩意的支持率98.9%。 好像还能发送文件，哈哈，强大。   \n不过仔细一看 window.postMessage()，就注定了你首先得拿到window这个对象。 也注定他使用的限制， 两个窗体必须建立起联系。 常见建立联系的方式：\n* window.open\n* window.opener\n* iframe\n\n**提到上面的window.open,  open后你能获得被打开窗体的句柄，当然也可以直接操作窗体了。**\n\n-------------------\n\n到这里，我觉得一般的前端人员能想到的比较正经的方案应该是上面三种啦。   \n当然，我们接下来说说可能不是那么常见的另外三种方式。\n\n\n### StorageEvent\nPage 1\n```js\nlocalStorage.setItem('message',JSON.stringify({\n    message: '消息'，\n    from: 'Page 1',\n    date: Date.now()\n}))\n```\n\nPage 2\n```js\nwindow.addEventListener(\"storage\", function(e) {\n    console.log(e.key, e.newValue, e.oldValue)\n});\n```\n如上， Page 1设置消息， Page 2注册storage事件，就能监听到数据的变化啦。\n\n\n上面的e就是[StorageEvent](https://developer.mozilla.org/en-US/docs/Web/API/StorageEvent),有下面特有的属性（都是只读）：\n* key ：代表属性名发生变化.当被clear()方法清除之后所有属性名变为null\n* newValue：新添加进的值.当被clear()方法执行过或者键名已被删除时值为null\n* oldValue：原始值.而被clear()方法执行过，或在设置新值之前并没有设置初始值时则返回null\n* storageArea：被操作的storage对象\n* url：key发生改变的对象所在文档的URL地址\n\n\n### Broadcast Channel\n这玩意主要就是给多窗口用的，Service Woker也可以使用。 firefox,chrome, Opera均支持，有时候真的是很讨厌Safari，浏览器支持77%左右。\n\n使用起来也很简单, 创建BroadcastChannel, 然后监听事件。 只需要注意一点，渠道名称一致就可以。   \nPage 1\n```js\n    var channel = new BroadcastChannel(\"channel-BroadcastChannel\");\n    channel.postMessage('Hello, BroadcastChannel!')\n```\nPage 2\n```js\n    var channel = new BroadcastChannel(\"channel-BroadcastChannel\");\n    channel.addEventListener(\"message\", function(ev) {\n        console.log(ev.data)\n    });\n```\n\n### SharedWorker\n这是Web Worker之后出来的共享的Worker，不通页面可以共享这个Worker。  \nMDN这里给了一个比较完整的例子[simple-shared-worker](https://github.com/mdn/simple-shared-worker)。   \n\n这里来个插曲，Safari有几个版本支持这个特性，后来又不支持啦，还是你Safari，真是6。\n\n虽然，SharedWorker本身的资源是共享的，但是要想达到多页面的互相通讯，那还是要做一些手脚的。\n先看看MDN给出的例子的ShareWoker本身的代码：\n```js\nonconnect = function(e) {\n  var port = e.ports[0];\n\n  port.onmessage = function(e) {\n    var workerResult = 'Result: ' + (e.data[0] * e.data[1]);\n    port.postMessage(workerResult);\n  }\n\n}\n```\n上面的代码其实很简单，port是关键，这个port就是和各个页面通讯的主宰者，既然SharedWorker资源是共享的，那好办，把port存起来就是啦。   \n看一下，如下改造的代码：    \nSharedWorker就成为一个纯粹的订阅发布者啦，哈哈。\n```js\nvar portList = [];\n\nonconnect = function(e) {\n  var port = e.ports[0];\n  ensurePorts(port);\n  port.onmessage = function(e) {\n    var data = e.data;\n    disptach(port, data);\n  };\n  port.start();\n};\n\nfunction ensurePorts(port) {\n  if (portList.indexOf(port) \u003c 0) {\n    portList.push(port);\n  }\n}\n\nfunction disptach(selfPort, data) {\n  portList\n    .filter(port =\u003e selfPort !== port)\n    .forEach(port =\u003e port.postMessage(data));\n}\n\n```\n\n### [MessageChannel](https://developer.mozilla.org/zh-CN/docs/Web/API/MessageChannel)\nChannel Messaging API的 **`MessageChannel`** 接口允许我们创建一个新的消息通道，并通过它的两个[`MessagePort`](https://developer.mozilla.org/zh-CN/docs/Web/API/MessagePort) 属性发送数据。\n\n其需要先通过 postMessage先建立联系。\n\nMessageChannel的基本使用：\n```js\nvar channel = new MessageChannel();\nvar para = document.querySelector('p');\n\nvar ifr = document.querySelector('iframe');\nvar otherWindow = ifr.contentWindow;\n\nifr.addEventListener(\"load\", iframeLoaded, false);\n\nfunction iframeLoaded() {\n  otherWindow.postMessage('Hello from the main page!', '*', [channel.port2]);\n}\n\nchannel.port1.onmessage = handleMessage;\nfunction handleMessage(e) {\n  para.innerHTML = e.data;\n}   \n```\n\n至于在线的例子，MDN官方有一个版本 [MessageChannel 通讯](https://mdn.github.io/dom-examples/channel-messaging-basic/)\n\n\n## 写在最后\n如果你觉得不错，你的一赞一评就是我前行的最大动力。\n\n**技术交流群请到 [这里来](https://juejin.cn/pin/6994350401550024741 \"https://juejin.cn/pin/6994350401550024741\")。 \n或者添加我的微信 dirge-cloud，一起学习。**\n\n\n## 引用\n\u003e[MDN Web Docs - Broadcast Channel](https://developer.mozilla.org/en-US/docs/Web/API/BroadcastChannel)    \n\u003e [BroadcastChannel | Can I Use](https://caniuse.com/#search=BroadcastChannel)    \n\u003e [broadcast-channel](https://github.com/pubkey/broadcast-channel)   \n\u003e[StorageEvent](https://developer.mozilla.org/en-US/docs/Web/API/StorageEvent)  \n\u003e[SharedWorker](https://developer.mozilla.org/en-US/docs/Web/API/SharedWorker)    \n\u003e[simple-shared-worker](https://github.com/mdn/simple-shared-worker/blob/gh-pages/worker.js)     \n\u003e[SharedWorker | Can I Use](https://caniuse.com/#search=SharedWorker)   \n\u003e[共享线程 SharedWorker](https://blog.csdn.net/qq_38177681/article/details/82048895)   \n\u003e[feature-shared-web-workers](https://webkit.org/status/#feature-shared-web-workers) \n\u003e[两个浏览器窗口间通信总结](https://segmentfault.com/a/1190000016927268)\n"
+    },
+    "author_user_info": {
+      "user_id": "131597122679661",
+      "user_name": "云的世界",
+      "company": "公号：云的程序世界",
+      "job_title": "天空系",
+      "avatar_large": "https://sf1-ttcdn-tos.pstatp.com/img/user-avatar/f1a9f122e925aeef5e4534ff7f706729~300x300.image",
+      "level": 5,
+      "description": "看世界，听世界，问世界。  \n微信：dirge-cloud",
+      "followee_count": 50,
+      "follower_count": 1048,
+      "post_article_count": 56,
+      "digg_article_count": 1992,
+      "got_digg_count": 8736,
+      "got_view_count": 274678,
+      "post_shortmsg_count": 7,
+      "digg_shortmsg_count": 2,
+      "isfollowed": false,
+      "favorable_author": 1,
+      "power": 11482,
+      "study_point": 0,
+      "university": {
+        "university_id": "0",
+        "name": "",
+        "logo": ""
+      },
+      "major": {
+        "major_id": "0",
+        "parent_id": "0",
+        "name": ""
+      },
+      "student_status": 0,
+      "select_event_count": 0,
+      "select_online_course_count": 0,
+      "identity": 0,
+      "is_select_annual": false,
+      "select_annual_rank": 0,
+      "annual_list_type": 0,
+      "extraMap": {},
+      "is_logout": 0
+    },
+    "category": {
+      "category_id": "6809637767543259144",
+      "category_name": "前端",
+      "category_url": "frontend",
+      "rank": 2,
+      "back_ground": "https://lc-mhke0kuv.cn-n1.lcfile.com/8c95587526f346c0.png",
+      "icon": "https://lc-mhke0kuv.cn-n1.lcfile.com/1c40f5eaba561e32.png",
+      "ctime": 1457483942,
+      "mtime": 1432503190,
+      "show_type": 3,
+      "item_type": 2,
+      "promote_tag_cap": 4,
+      "promote_priority": 2
+    },
+    "tags": [
+      {
+        "id": 2546526,
+        "tag_id": "6809640407484334093",
+        "tag_name": "前端",
+        "color": "#60ADFF",
+        "icon": "https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/leancloud-assets/bac28828a49181c34110.png~tplv-t2oaga2asx-image.image",
+        "back_ground": "",
+        "show_navi": 1,
+        "ctime": 1435971546,
+        "mtime": 1630336526,
+        "id_type": 9,
+        "tag_alias": "",
+        "post_article_count": 84809,
+        "concern_user_count": 527533
+      },
+      {
+        "id": 2546519,
+        "tag_id": "6809640398105870343",
+        "tag_name": "JavaScript",
+        "color": "#616161",
+        "icon": "https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/leancloud-assets/5d70fd6af940df373834.png~tplv-t2oaga2asx-image.image",
+        "back_ground": "",
+        "show_navi": 0,
+        "ctime": 1435884803,
+        "mtime": 1630336526,
+        "id_type": 9,
+        "tag_alias": "",
+        "post_article_count": 66187,
+        "concern_user_count": 398800
+      }
+    ],
+    "user_interact": {
+      "id": 7002012595200720927,
+      "omitempty": 2,
+      "user_id": 0,
+      "is_digg": false,
+      "is_follow": false,
+      "is_collect": false
+    },
+    "org": {
+      "org_info": null,
+      "org_user": null,
+      "is_followed": false
+    },
+    "req_id": "202108302318190102040502082E0E2B6F"
+  }
+}
