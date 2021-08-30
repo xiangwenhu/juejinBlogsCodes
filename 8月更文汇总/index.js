@@ -75,8 +75,8 @@ async function loopGetArticles(count) {
 }
 
 
-function getDateStr(ctime){
-    return new Date(ctime*1000).toISOString().slice(5,10)
+function getDateStr(ctime) {
+    return new Date(ctime * 1000).toISOString().slice(5, 10)
 }
 
 async function getArticleContents(artIds) {
@@ -86,7 +86,7 @@ async function getArticleContents(artIds) {
     for (let i = 0; i < artIds.length; i++) {
         const res = await getArticleContent(artIds[i]);
         articleInfo = res.data.article_info;
-        if(is8MArticle(articleInfo)){
+        if (is8MArticle(articleInfo)) {
             results.push({
                 id: artIds[i],
                 title: articleInfo.title,
@@ -101,22 +101,27 @@ async function getArticleContents(artIds) {
 
 
 function is8MArticle(art) {
-    return art.title.endsWith("8月更文挑战") || art.mark_content.slice(0, 200).indexOf("https://juejin.cn/post/6987962113788493831") >=0
+    return art.title.endsWith("8月更文挑战") || art.mark_content.slice(0, 200).indexOf("https://juejin.cn/post/6987962113788493831") >= 0
 }
 
 
-function generateMD(articleInfos){
-    return articleInfos.map(art=>`* ${art.date} [${art.title}](https://juejin.cn/post/${art.id}) - ${art.digg}赞`).join('\n');
+function generateMD(articleInfos) {
+    return articleInfos.map(art => `* ${art.date} [${art.title}](https://juejin.cn/post/${art.id}) - ${art.digg}赞`).join('\n');
 }
 
+function getTotalDigg(articleInfos) {
+    return articleInfos.reduce((total, cur) => {
+        return total + cur.digg;
+    }, 0)
+}
 
 
 ; (async function () {
 
     const articleIds = await loopGetArticles(MAX_COUNT);
-    const  articleInfos = await getArticleContents(articleIds);
-    const  mdContent =  generateMD(articleInfos);
-
+    const articleInfos = await getArticleContents(articleIds);
+    const mdContent = generateMD(articleInfos);
     console.log(mdContent);
+    console.log("总赞：", getTotalDigg(articleInfos));
 
 })();
