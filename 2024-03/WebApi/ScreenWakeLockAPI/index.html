@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Screen Wake Lock API</title>
+</head>
+
+<body>
+
+    <button onclick="onLockScreen()">锁屏</button>
+    <button onclick="onUnlockScreen()">释放</button>
+
+    <div id="statusElem"></div>
+    <script>
+        let wakeLock = null;
+        async function onLockScreen() {
+            // create an async function to request a wake lock
+            try {
+                wakeLock = await navigator.wakeLock.request("screen");
+                statusElem.textContent = "唤醒锁已激活";
+
+                wakeLock.addEventListener("release", () => {
+                    // the wake lock has been released
+                    statusElem.textContent = "唤醒锁已释放";
+                });
+            } catch (err) {
+                // The Wake Lock request has failed - usually system related, such as battery.
+                statusElem.textContent = `${err.name}, ${err.message}`;
+            }
+        }
+        async function onUnlockScreen() {
+            if (!wakeLock) return;
+            wakeLock.release().then(() => {
+                wakeLock = null;
+            });
+        }
+    </script>
+
+</body>
+
+</html>

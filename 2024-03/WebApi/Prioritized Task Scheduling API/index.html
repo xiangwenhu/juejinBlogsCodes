@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prioritized Task Scheduling API </title>
+</head>
+
+<body>
+
+    <div id="log"></div>
+    <script>
+        let log = document.getElementById("log");
+        function mylog(text) {
+            log.innerHTML += `${text}<br/>`;
+        }
+
+        // three tasks, in reverse order of priority
+        scheduler.postTask(() => mylog("background 1"), { priority: "background" });
+        scheduler.postTask(() => mylog("user-visible 1"), { priority: "user-visible" });
+        scheduler.postTask(() => mylog("user-blocking 1"), { priority: "user-blocking" });
+
+        // three more tasks, in reverse order of priority
+        scheduler.postTask(() => mylog("background 2"), { priority: "background" });
+        scheduler.postTask(() => mylog("user-visible 2"), { priority: "user-visible" });
+        scheduler.postTask(() => mylog("user-blocking 2"), { priority: "user-blocking" });
+
+        // Task with default priority: user-visible
+        scheduler.postTask(() => mylog("user-visible 3 (default)"));
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compression Stream API</title>
+</head>
+
+<body>
+
+    <input type="file" id="file">
+
+    <script>
+        // 创建一个读取文件的Blob URL或者ReadableStream
+        const fileInput = document.querySelector('#file');
+        let fileStream;
+
+        fileInput.addEventListener('change', async (event) => {
+            const file = event.target.files[0];
+            const blob = new Blob([file], { type: file.type });
+            const fileUrl = URL.createObjectURL(blob);
+
+            // 创建一个读取文件内容的流
+            const readableStream = await fetch(fileUrl).then(res => res.body);
+
+            // 创建一个压缩流
+            const compressionStream = new CompressionStream('gzip'); // 'gzip'或'brotli'等算法
+
+            // 将原始数据流连接到压缩流
+            const compressedStream = readableStream.pipeThrough(compressionStream);
+
+            // 将压缩后的数据写入新的Blob对象
+            const writer = compressedStream.getWriter();
+            const chunks = [];
+            writer.closed.then(() => {
+                const compressedBlob = new Blob(chunks, { type: 'application/gzip' });
+                // 可能会进一步处理压缩后的Blob，例如保存到磁盘或上传
+                let url = URL.createObjectURL(blob);
+                // 创建隐藏的a标签
+                let a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+                a.download = 'file.zip'; // 设置下载的文件名
+
+                // 添加到DOM中
+                document.body.appendChild(a);
+
+                // 模拟点击下载
+                a.click();
+            });
+
+            // 处理压缩流的数据
+            compressedStream.tee().forEach((stream) => {
+                const reader = stream.getReader();
+                return pump(reader);
+
+                function pump(reader) {
+                    return reader.read().then(({ done, value }) => {
+                        if (done) {
+                            // 当流结束时，将已读取的所有chunk添加到chunks数组
+                            chunks.push(value);
+                            return;
+                        }
+                        chunks.push(value);
+                        return pump(reader);
+                    });
+                }
+            });
+        });
+
+    </script>
+</body>
+
+</html>

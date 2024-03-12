@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+    <div contenteditable virtualkeyboardpolicy="manual" id="editor" style="cursor: pointer;"></div>
+    <script>
+        if ("virtualKeyboard" in navigator) {
+            navigator.virtualKeyboard.overlaysContent = true;
+
+            const editor = document.getElementById("editor");
+            editor.addEventListener("focus", () => {
+                console.log('focus');
+                navigator.virtualKeyboard.show();
+            });
+        }else {
+            alert('not supported');
+        }
+    </script>
+
+</body>
+
+</html>

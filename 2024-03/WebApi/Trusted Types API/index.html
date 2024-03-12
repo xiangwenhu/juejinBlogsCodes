@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trusted Types API</title>
+</head>
+
+<body>
+
+    <div id="myDiv"></div>
+
+    <script>
+
+        var entityMap = {
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': '&quot;',
+            "'": '&#39;',
+            "/": '&#x2F;'
+        };
+        // 创建一个策略，该策略将用于将不受信任的输入转换为安全的内容。
+        const escapeHTMLPolicy = trustedTypes.createPolicy("myEscapePolicy", {
+            createHTML: (string) => string.replace(/[&<>"'\/]/g, function (s) {
+                return entityMap[s];
+            }),
+        });
+
+        let el = document.getElementById("myDiv");
+        const escaped = escapeHTMLPolicy.createHTML("<img src=x onerror=alert(1)>");
+        console.log(escaped instanceof TrustedHTML); // true
+        el.innerHTML = escaped;
+
+    </script>
+</body>
+
+</html>

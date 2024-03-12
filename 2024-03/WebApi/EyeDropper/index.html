@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <button id="start-button">打开拾色器</button>
+
+    <img src="https://img.alicdn.com/imgextra/i1/O1CN01CC9kic1ig1r4sAY5d_!!6000000004441-2-tps-880-210.png" />
+
+    <div>
+        颜色是：<span id="result"></span>
+    </div>
+    <script>
+        document.getElementById("start-button").addEventListener("click", () => {
+            const resultElement = document.getElementById("result");
+
+            if (!window.EyeDropper) {
+                resultElement.textContent = "你的浏览器不支持 EyeDropper API";
+                return;
+            }
+
+            const eyeDropper = new EyeDropper();
+            const abortController = new AbortController();
+
+            eyeDropper
+                .open({ signal: abortController.signal })
+                .then((result) => {
+                    resultElement.textContent = result.sRGBHex;
+                    resultElement.style.backgroundColor = result.sRGBHex;
+                })
+                .catch((e) => {
+                    resultElement.textContent = e;
+                });
+
+            // setTimeout(() => {
+            //     abortController.abort();
+            // }, 2000);
+        });
+
+    </script>
+</body>
+
+</html>

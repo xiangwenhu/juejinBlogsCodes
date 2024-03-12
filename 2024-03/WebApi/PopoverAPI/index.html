@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Popover API</title>
+
+    <style>
+        html {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        /* Transition for the popover itself */
+
+        [popover]:popover-open {
+            opacity: 1;
+            transform: scaleX(1);
+        }
+
+        [popover] {
+            font-size: 1.2rem;
+            padding: 10px;
+
+            /* Final state of the exit animation */
+            opacity: 0;
+            transform: scaleX(0);
+
+            transition:
+                opacity 0.7s,
+                transform 0.7s,
+                overlay 0.7s allow-discrete,
+                display 0.7s allow-discrete;
+            /* Equivalent to
+  transition: all 0.7s allow-discrete; */
+        }
+
+        /* Needs to be after the previous [popover]:popover-open rule
+to take effect, as the specificity is the same */
+        @starting-style {
+            [popover]:popover-open {
+                opacity: 0;
+                transform: scaleX(0);
+            }
+        }
+
+        /* Transition for the popover's backdrop */
+
+        [popover]::backdrop {
+            background-color: rgb(0 0 0 / 0%);
+            transition:
+                display 0.7s allow-discrete,
+                overlay 0.7s allow-discrete,
+                background-color 0.7s;
+            /* Equivalent to
+  transition: all 0.7s allow-discrete; */
+        }
+
+        [popover]:popover-open::backdrop {
+            background-color: rgb(0 0 0 / 25%);
+        }
+
+        /* The nesting selector (&) cannot represent pseudo-elements
+so this starting-style rule cannot be nested */
+
+        @starting-style {
+            [popover]:popover-open::backdrop {
+                background-color: rgb(0 0 0 / 0%);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <button popovertarget="mypopover">Show the popover</button>
+    <div popover="auto" id="mypopover">I'm a Popover! I should animate.</div>
+
+</body>
+
+</html>

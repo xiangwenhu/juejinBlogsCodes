@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+    <input type="file" id="file" placeholder="请选择文本文件">
+    <script>
+        async function compressAndDownload(filename, content) {
+            // 创建原始数据流
+            const stringStream = new ReadableStream({
+                start(controller) {
+                    controller.enqueue(new TextEncoder().encode(content));
+                    controller.close();
+                }
+            });
+
+            // 创建压缩流
+            const compressionStream = new CompressionStream('gzip');
+
+            // 将原始数据流连接到压缩流
+            const compressedStream = stringStream.pipeThrough(compressionStream);
+
+            // 创建ArrayBuffer容器接收压缩数据
+            const chunks = [];
+            const reader = compressedStream.getReader();
+            try {
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+                    chunks.push(value);
+                }
+            } finally {
+                reader.releaseLock();
+            }
+
+            // 合并压缩数据并创建Blob
+            const compressedBlob = new Blob(chunks, { type: 'application/gzip' });
+
+            // 创建下载链接
+            const url = URL.createObjectURL(compressedBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `${filename}.gz`;
+            document.body.appendChild(link);
+
+            // 触发下载
+            link.click();
+
+            // 清理
+            setTimeout(() => {
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+            }, 0);
+        }
+
+
+        file.addEventListener('change', async (event) => {
+            if(event.target.files.length === 0){
+                return;
+            }
+            const file = event.target.files[0];
+            const reader = new FileReader();
+            reader.readAsText(event.target.files[0]);
+            reader.onload = async () => {
+                const content = reader.result;
+                compressAndDownload(file.name, content);
+            }
+        })
+    </script>
+</body>
+
+</html>
