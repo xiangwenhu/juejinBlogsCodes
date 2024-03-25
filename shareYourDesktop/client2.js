@@ -14,13 +14,16 @@ var options = {
     // 如果你的项目开启了 App 证书进行 Token 鉴权，这里填写生成的 Token 值。
     token: "",
     // 设置频道内的用户角色，可设为 "audience" 或 "host"
-    role: "audience"
+    role: ""
 };
 
 async function startBasicLive() {
-    rtc.client = AgoraRTC.createClient({ mode: "live", codec: "vp8" });
+    // 创建客户端
+    rtc.client = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
+    // 设置角色
     rtc.client.setClientRole(options.role);
 
+    // 订阅
     rtc.client.on("user-published", async (user, mediaType) => {
                 // 开始订阅远端用户。
         await rtc.client.subscribe(user, mediaType);
@@ -31,12 +34,10 @@ async function startBasicLive() {
             // 订阅完成后，从 `user` 中获取远端视频轨道对象。
             const remoteVideoTrack = user.videoTrack;
             // 动态插入一个 DIV 节点作为播放远端视频轨道的容器。
-            const playerContainer = document.createElement("div");
+            const playerContainer = document.getElementById("videoContainer");
             // 给这个 DIV 节点指定一个 ID，这里指定的是远端用户的 UID。
-            playerContainer.id = user.uid.toString();
-            playerContainer.style.width = "640px";
-            playerContainer.style.height = "480px";
-            document.body.append(playerContainer);
+            // playerContainer.id = user.uid.toString();
+            // document.body.append(playerContainer);
 
             // 订阅完成，播放远端音视频。
             // 传入 DIV 节点，让 SDK 在这个节点下创建相应的播放器播放远端视频。
@@ -50,7 +51,8 @@ async function startBasicLive() {
             // 播放音频因为不会有画面，不需要提供 DOM 元素的信息。
             remoteAudioTrack.play();
         }
-    });   
+    });
+    // 加入渠道
     const uid = await rtc.client.join(options.appId, options.channel, options.token, null);
     console.log("uid", uid);
 }

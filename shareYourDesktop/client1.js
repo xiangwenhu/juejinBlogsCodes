@@ -22,11 +22,16 @@ var options = {
 
 
 async function startBasicLive() {
-    rtc.client = AgoraRTC.createClient({ mode: "live", codec: "vp8" });
+    // 创建客户端
+    rtc.client = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
+    // 设置角色
     rtc.client.setClientRole(options.role);
 
-    const uid = await rtc.client.join(options.appId, options.channel, options.token, options.uid);       
+    // 加入频道
+    const uid = await rtc.client.join(options.appId, options.channel, options.token, options.uid);
+    // 音频轨道
     rtc.localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack(); // 麦克风
+    // 视频轨道
     rtc.localVideoTrack = await AgoraRTC.createScreenVideoTrack();  // 桌面
 
     // 将这些音视频轨道对象发布到频道中。
