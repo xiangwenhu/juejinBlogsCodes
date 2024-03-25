@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+</head>
+
+<body>
+
+    <button type="button" id="btn">获取内容并解析</button>
+    <script type="module">
+        import { getDemoHTMLContent } from "./util.mjs";
+
+        async function getContent() {
+            // 获取 demo.html 文件内容
+            const demoHTMLContent = await getDemoHTMLContent();
+
+            // 解析 HTML
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(demoHTMLContent, "text/html");
+
+            // 获取 .content 节点内容
+            const contentValue = doc.querySelector(".content").textContent;
+
+            // 获取 script 里面 window.__INIT_STATE
+            const initState = eval('(' + doc.scripts[0].textContent + ')');
+
+            console.log('contentValue:', contentValue);
+            console.log('initState', initState);
+
+        }
+
+        btn.addEventListener('click', getContent)
+
+    </script>
+
+
+</body>
+
+</html>
